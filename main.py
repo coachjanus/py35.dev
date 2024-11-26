@@ -1,82 +1,27 @@
-var = "string"
-print(type (var))
-print(id (var))
-True
-False
-None
+# lecture 02
 
-# print(2**10000)
+my_tuple = ('foo', 'bar')
 
-import math
+print(my_tuple)
+print(type(my_tuple))
+print(id(my_tuple))
+print(len(my_tuple))
+print(dir(my_tuple))
 
-print(math.tan(math.pi))
+my_range = range(1, 15, 2)
 
-from decimal import *
+print(list(my_range))
 
-getcontext().prec = 20
+print(list(my_range))
 
-print(Decimal(3.14))
+s1 = list(my_range)
+print(s1[-1])
 
-print ("""
-Hello 
-World
+print(s1.index(9))
 
-""" )
+t1 = 1,2,3,4,5,6,7 # (1,2,3)
 
-print ('''
+x1, *sublist, x2 = t1
 
-Hello 
-World
-''')
-
-print("hello \t world")
-
-
-print("hello \t \"world\"")
-
-print(r'Hi\nHello\tworld')
-print("Hello" + "World")
-
-print("_" * 80)
-
-hello = "Hello World"""
-
-print(hello[7])
-print(hello[0])
-print(hello[len(hello) -1])
-print(min(hello))
-print(max(hello))
-
-print(hello[2:7])
-
-print(hello.split())
-
-print("My first name {} my last name {}".format("Tom", "Cat"))
-
-name = "John"
-last_name = "Doe"
-
-print(f"My name {name} {last_name}")
-
-
-def hell(p):
-    print(f"Hello {p}")
-
-hell("World")
-
-i = 0
-while i < 20:
-    # if i > 10:
-    #     continue
-    print(i)
-    i = i + 1
-
-for c in hello:
-    print(c)
-
-
-while True:
-    o = input("Ender operation: ")
-    if o == 'q':
-        break
-
+print (x1)
+print(sublist)
