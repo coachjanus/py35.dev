@@ -8,14 +8,6 @@ contact = {
     'phone_number': "1234567"
 }
 
-# print(contact)
-# print(type(contact))
-# print(id(contact))
-
-# print(dir(contact))
-
-# print(len(contact))
-
 contacts.append(contact)
 
 TITLE = "phone book"
