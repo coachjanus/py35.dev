@@ -8,7 +8,7 @@ class Todo:
 
     COLORS = {
         'Learn': 'yellow',
-        'Woek': 'red',
+        'Work': 'red',
         'Sport': 'cyan',
         'Study': 'green'
     }

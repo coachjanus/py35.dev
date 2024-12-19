@@ -5,15 +5,16 @@ from todo.todos import TodoList
 from rich.console import Console
 from rich.table import Table
 
-from todo import __app_name__, __version__
+from todo import __app_name__, __version__, TITLE, helpers
+
+import typer
 
 console = Console()
+app = typer.Typer()
+
 header = Todo.make_header()
 
-
-
 def show(tasks):
-    console.print(f"[bold magenta] {__app_name__.upper()} [/bold magenta]", chr(128187), f"[bold magenta] {__version__} [/bold magenta]")
     table = Table(show_header=True, header_style="bold blue")
 
     for item in header:
@@ -26,27 +27,38 @@ def show(tasks):
 
     console.print(table)
 
-def app():
-    print(Todo.DONE, Todo.PENDING)
-    # print(Todo.make_header())
+@app.command()
+def run():
+
+    helpers.hello()
 
     todo_list = TodoList()
 
-    td1 = Todo('To do somethong', 'Work')
-    print(td1)
-    todo_list.add(td1)
+    todo_list.add('To do somethong', 'Work')
+    todo_list.add('To do somethong other', 'Study')
 
-    td2 = Todo('To do somethong other', 'Stidy')
-    print(td2)
-    todo_list.add(td2)
+    while True:
+        match helpers.make_your_choice():
+            case 'a':
+                category = helpers.choose_category()
+                task = helpers.add_your_task()
+                todo_list.add(task, category)
+            case 'l':
+                tasks = todo_list.get_todo_list()
+                show(tasks)
 
-    tasks = todo_list.get_todo_list()
+            case 'u':
+                position = helpers.your_task()
+                todo_list.complete(int(position))
+                tasks = todo_list.get_todo_list()
+            case 'r':
+                position = helpers.your_task()
+                todo_list.delete(int(position))
+                tasks = todo_list.get_todo_list()
+            case 'q':
+                helpers.bye(TITLE)
+                break
+            case _:
+                helpers.help_me()
 
-    show(tasks)
 
-    todo_list.complete(2)
-    tasks = todo_list.get_todo_list()
-    show(tasks)
-
-
-    
