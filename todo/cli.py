@@ -11,6 +11,8 @@ from todo import db, config, todos
 
 import typer
 
+from typing import Annotated
+
 console = Console()
 app = typer.Typer()
 
@@ -30,7 +32,14 @@ def show(tasks):
     console.print(table)
 
 @app.command()
-def init(db_path = typer.Option(str(db.DEFAULT_DB_FILE_PATH), prompt="Database location?")):
+# def init(db_path = typer.Option(str(db.DEFAULT_DB_FILE_PATH), prompt="Database location?")) -> None:
+def init(
+    db_path: Annotated[
+        str,
+        typer.Option("--db-path", "-db", 
+                     prompt="Database location?"),
+        ] = str(db.DEFAULT_DB_FILE_PATH),) -> None:
+    
     app_init_error = config.init_app(db_path)
 
     if app_init_error:

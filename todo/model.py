@@ -1,4 +1,8 @@
 import datetime
+from typing import Any, Dict, List, Union 
+from typing import TypeAlias
+
+Matrix:TypeAlias = List[List[Union[str, None, int]]]
 
 class Todo:
     # pass
@@ -15,7 +19,7 @@ class Todo:
 
     keys = ['name', 'style', 'width', 'min_width', 'justify']
 
-    values = [
+    values: Matrix = [
         ["#", "dim", 6, None, "left"],
         ["Todo", None, None, 20, "left"],
         ["Category", None, None, 12, "right"],

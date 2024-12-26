@@ -1,21 +1,24 @@
 from pathlib import Path
 import json
 
+from .db_response import DBResponse
+
 from todo import DB_READ_ERROR, DB_WRITE_ERROR, JSON_ERROR, SUCCESS
 
 class DBHandler:
-    def __init__(self, db_path):
+    def __init__(self, db_path: Path) -> None:
         self._db_path = db_path
 
-    def read_todos(self):
+    def read_todos(self) -> DBResponse:
         try:
             with self._db_path.open("r") as db:
                 try:
-                    return (json.load(db), SUCCESS)
+                    return DBResponse(json.load(db), SUCCESS)
+                    # return (json.load(db), SUCCESS)
                 except json.JSONDecodeError:
-                    return ([], JSON_ERROR)
+                    return DBResponse([], JSON_ERROR)
         except OSError:
-            return ([], DB_READ_ERROR)
+            return DBResponse([], DB_READ_ERROR)
         
     
     def write_todos(self, todo_list):
@@ -23,7 +26,7 @@ class DBHandler:
 
         try:
             with self._db_path.open("w") as db:
-                json.dump(self.todo_list, db, indent=4):
+                json.dump(self.todo_list, db, indent=4)
             return (SUCCESS)
         except OSError:
             return ([], DB_WRITE_ERROR)
