@@ -18,9 +18,9 @@ class TodoList:
         task = " ".join(task)
         if not task.endswith("."):
             task += "."
-        
+
         read = self._db_handler.read_todos()
-        
+
         if read.error == DB_READ_ERROR:
             return CurrentTodo(self.todo, read.error)
         

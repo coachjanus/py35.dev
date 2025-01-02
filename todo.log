@@ -1,0 +1,11 @@
+INFO:root:The to-do database is /home/janus/.janus_todo.json
+WARNING:todo.db_handler:Opened database /home/janus/.janus_todo.json for reading tasks
+INFO:todo.db_handler:Database was read successfully!
+WARNING:todo.db_handler:Opened database /home/janus/.janus_todo.json for reading tasks
+INFO:todo.db_handler:Database was read successfully!
+WARNING:todo.db_handler:Opened database /home/janus/.janus_todo.json for reading tasks
+INFO:todo.db_handler:Database was read successfully!
+WARNING:todo.db_handler:Opened database /home/janus/.janus_todo.json for reading tasks
+INFO:todo.db_handler:Database was read successfully!
+WARNING:todo.db_handler:Opened database /home/janus/.janus_todo.json for reading tasks
+INFO:todo.db_handler:Database was read successfully!

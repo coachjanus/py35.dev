@@ -1,0 +1,4 @@
+Opened database /home/janus/.janus_todo.json for reading tasks
+Database was read successfully!
+2025-01-02 20:24:43,229 - todo.db_handler - WARNING - Opened database /home/janus/.janus_todo.json for reading tasks
+2025-01-02 20:24:43,229 - todo.db_handler - INFO - Database was read successfully!

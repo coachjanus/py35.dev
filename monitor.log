@@ -1,0 +1,10 @@
+2025-01-02 20:56-34 - mainApp - INFO - [Thu Jan  2 20:56:34 2025] noticed: Watchdog recived opened event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:56-34 - mainApp - INFO - [Thu Jan  2 20:56:34 2025] noticed: Watchdog recived closed_no_write event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived opened event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived modified event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived closed event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived modified event on ./monitor/monitoring/recursive/docs
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived opened event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived closed_no_write event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived opened event on ./monitor/monitoring/recursive/docs/readme.md
+2025-01-02 20:57-07 - mainApp - INFO - [Thu Jan  2 20:57:07 2025] noticed: Watchdog recived closed_no_write event on ./monitor/monitoring/recursive/docs/readme.md

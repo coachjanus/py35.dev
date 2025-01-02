@@ -10,6 +10,8 @@ from todo.db_response import DBResponse
 
 from todo.model import Todo
 
+import logging
+
 class TodoEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Todo):
@@ -19,14 +21,24 @@ class TodoEncoder(json.JSONEncoder):
 class DBHandler:
     def __init__(self, db_path: Path) -> None:
         self._db_path = db_path
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
+        self.database_handler = logging.FileHandler('database.log')
+        self.database_handler.setLevel(logging.INFO)
+        self.database_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        self.database_handler.setFormatter(self.database_format)
+        self.logger.addHandler(self.database_handler)
 
     def read_todos(self) -> DBResponse:
         try:
             with self._db_path.open("r") as db:
                 try:
+                    self.logger.warning(f"Opened database {self._db_path} for reading tasks")
+                    self.logger.info("Database was read successfully!")
                     return DBResponse(json.load(db), SUCCESS)
 
                 except json.JSONDecodeError:  # Catch wrong JSON format
+                    self.logger.exception(f"Exception {JSON_ERROR} occurred!")
                     return DBResponse([], JSON_ERROR)
 
                 

@@ -15,6 +15,10 @@ from todo import config
 
 from typing_extensions import Annotated
 
+import logging
+
+logging.basicConfig(filename="todo.log", level=logging.INFO)
+
 app = typer.Typer()
 
 console = Console()
@@ -53,6 +57,8 @@ def init(
             fg=typer.colors.RED,
         )
 
+        logging.error(f'Creating config file failed with "{ERRORS[app_init_error]}"')
+
         raise typer.Exit(1)
 
     db_init_error = db.init_database(Path(db_path))
@@ -61,10 +67,12 @@ def init(
             f'Creating database failed with "{ERRORS[db_init_error]}"',
             fg=typer.colors.RED,
         )
+        logging.error(f'Creating database failed with "{ERRORS[db_init_error]}"')
 
         raise typer.Exit(1)
 
     typer.secho(f"The to-do database is {db_path}", fg=typer.colors.GREEN)
+    logging.info(f"The to-do database is {db_path}")
 
 
 def get_todo_list():
