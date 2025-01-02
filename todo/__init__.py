@@ -1,10 +1,9 @@
-# 
+"""Top-level package for To-Do."""
+# todo/__init__.py
+
 __app_name__ = "todo"
 __version__ = "0.1.0"
-
-TITLE = "My TODO list"
-
-# коди повернення за допомогою range() призначаємо їм цілі числа.
+TITLE = "Your TODO list" 
 (
     SUCCESS,
     DIR_ERROR,
