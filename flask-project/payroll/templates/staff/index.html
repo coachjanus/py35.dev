@@ -35,8 +35,15 @@
                 <td>{{ item['role_name'] }}</td>
                 <td>{{ item['join_date'].strftime('%Y-%m-%d') }}</td>
                 <td>
-                  <a type="button" class="btn btn-success" href="">Edit</a>
-                  <a type="button" class="btn btn-danger" href="">Delete</a>
+                  <div class="d-flex">
+                  <a type="button" class="btn btn-success" href="{{ url_for('staff.update', id=item['emp_id'])}}">Edit</a>
+
+                  <form method="post" action="{{ url_for('staff.delete', id=item['emp_id'])}}">
+                  <button type="submit" class="btn btn-danger" onclick="return confirm('Are You sure?');">Delete</button>
+
+                </form>
+              </div>
+
                 </td>
                 </tr>
             {% endfor %}
