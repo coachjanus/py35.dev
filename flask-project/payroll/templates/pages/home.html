@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>{% block title %}Home page{% endblock title %}</h2>
+{% endblock header %}
+
+{% block content %}
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam laudantium corrupti iusto magnam eveniet modi nemo laborum laboriosam, unde natus eligendi deserunt facilis ab voluptas amet suscipit dolorem voluptatibus ad. <a href="{{url_for('pages.about')}}">About page</a></p>
+
+    <hr>
+    <div class="container">
+    <form>
+        <fieldset>
+          <legend>Disabled fieldset example</legend>
+          <div class="mb-3">
+            <label for="disabledTextInput" class="form-label">First name</label>
+            <input type="text" id="disabledTextInput" class="form-control" placeholder="Please Enter First name">
+          </div>
+          <div class="mb-3">
+            <label for="disabledTextInput" class="form-label">Last name</label>
+            <input type="text" id="disabledTextInput" class="form-control" placeholder="Please Enter Last name">
+          </div>
+          <div class="mb-3">
+            <label for="disabledSelect" class="form-label">Disabled select menu</label>
+            <select id="disabledSelect" class="form-select">
+              <option>Disabled select</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck">
+              <label class="form-check-label" for="disabledFieldsetCheck">
+                Can't check this
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </fieldset>
+      </form>
+    </div>
+{% endblock content %}

@@ -1,17 +1,9 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>About page</h1>
-</body>
-</html> -->
-
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>About page</h1>
+    <h2>{% block title %}About page{% endblock title %}</h2>
 {% endblock header %}
+
+{% block content %}
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam laudantium corrupti iusto magnam eveniet modi nemo laborum laboriosam, unde natus eligendi deserunt facilis ab voluptas amet suscipit dolorem voluptatibus ad. <a href="{{url_for('pages.home')}}">Home page</a></p>
+{% endblock content %}

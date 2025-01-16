@@ -1,0 +1,368 @@
+How To Python Flask Tutorial
+Derrick Gee
+
+Derrick Gee
+·
+
+Follow
+9 min read
+·
+Feb 6, 2021
+
+Here is a how to setup Flask tutorial as of recent. I recommend following along in Linux/Mac/WSL, as my setup will be mostly done through the terminal. I will also assume some basic Python knowledge, as this isn’t a Python tutorial. This tutorial won’t be going over how to make a specific web app, as I think the best way to truly learn a technology is to build something for yourself. Rather than be stuck in a tutorial loop, learning the concepts and applying them to your own ideas would help you grow faster in my opinion. Use the docs to find things that weren’t covered in this tutorial that you need.
+Basic Setup
+
+Most of my setup will be coming from the docs on making the app installable. This will make flask able to run from any directory, instead of being limited to only the root directory. First we will setup the environment and install our dependencies. So in our terminal:
+
+mkdir myproject
+cd myproject
+python -m venv venv
+source venv/bin/activate
+
+Make a file called .env in the directory myproject/, this is where we store our environment variables.
+
+FLASK_APP=flaskr
+FLASK_ENV=development
+
+Make a file called setup.py in the same directory.
+
+from setuptools import find_packages, setupsetup(
+    name='flaskr',
+    version='1.0.0',
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
+        'flask',
+        'python-dotenv',
+        'Flask-Migrate',
+    ],
+)
+
+python-dotenv will auto load our .env file when running the flask app. Flask-Migrate is a package that helps with setting up and migrating our database without doing any manual work.
+
+Install dependencies:
+
+pip install -e .
+
+The -e flag makes the flaskr folder editable pretty much. Without the -e flag, any edits would not be reflected. As mentioned earlier, this method allows us to run flask from any subdirectories of the project. Not doing it this way would mean that flask can only be executed from the root folder.
+Getting Flask to Run
+
+Let’s start off by getting the app to run, and go over the concepts afterwards. Note that this is the way I organize my Flask app, feel free to change whatever you think would work better. Starting from our myproject/ folder, run the following commands to get our folder structure going:
+
+mkdir flaskr
+touch flaskr/__init__.py
+
+Now let’s edit __init__.py . Here is a basic snippet from the documentation with some slight tweaks of mine.
+
+import os
+from flask import Flask
+from .models import db
+from flask_migrate import Migratedef create_app(test_config=None):
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    )# Database settings
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///sqlite.db"
+    db.init_app(app)
+    migrate = Migrate(app, db)if test_config is None:
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        app.config.from_mapping(test_config)    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass# Register views
+    from .home import views as home_views
+    app.register_blueprint(home_views.bp)    return app
+
+In the flaskr/ folder, we will setup the database:
+
+touch flaskr/models.py
+
+Edit models.py :
+
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()class MyModel(db.Model):
+    __tablename__ = "mymodel"
+    # This id is required on every model, as it is the pk
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))# This is the display name for the model when queried
+    def __repr__(self):
+        return f"{self.name}"
+
+In the flaskr/ folder, lets make our home app and it’s views:
+
+mkdir flaskr/home
+touch flaskr/home/__init__.py
+touch flaskr/home/views.py
+
+Edit the flaskr/home/views.py :
+
+from flask import render_template, Blueprint, request
+from flaskr.models import db, MyModel
+bp = Blueprint("home", __name__, url_prefix="")@bp.route("/", methods=("GET",))
+def home():
+    q = MyModel.query.all()
+    new = MyModel(name=f"model no. {len(q)}")
+    db.session.add(new)
+    db.session.commit()
+    context = {
+        "models": MyModel.query.all()
+    }
+    return render_template("home/index.html", context=context)@bp.route("/mymodel/<int:pk>", methods=("GET",))
+def func_mymodel(pk):
+    q = MyModel.query.filter_by(id=pk).first()
+    context = {
+        "model_query": q
+    }
+    return render_template("home/index.html", context=context)
+
+Let’s make our html we are trying to display, in the flaskr/ folder:
+
+mkdir -p flaskr/templates/home
+touch flaskr/templates/home/index.html
+
+Edit the flaskr/templates/home/index.html:
+
+<h1>Hello Flask</h1>
+{% for model in context["models"] %}
+  <p>{{ model.name }}</p>
+{% endfor %}{% if context["model_query"] %}
+  <h1>Query:</h1>
+  <p>{{ context["model_query"].name }}</p>
+{% endif %}
+
+This is what our files and folders should look like
+
+Now that we have organized our Flask app’s code, we can init the database and run the webserver:
+
+flask db init
+flask db migrate
+flask db upgrade
+flask run
+
+Go to localhost:5000 on your browser, and you should see a “Hello Flask” heading. You should see that every time you go to the home url, a new model should be created. Going to the link, should bring up a single model name only.
+Going to the model no. 1 link
+Folder Structure
+
+Flask lets us have a good amount of freedom when it comes to customizing our folders and files structure. I personally like to keep things similar to Django, as that is what I use the most. Here is my layout for a single application on our flask:
+
+myproject/
+|--.env
+|--setup.py
+|--venv/
+|--flaskr/
+|  |--__init__.py
+|  |--models.py
+|  |--home/
+|  |  |--__init__.py
+|  |  |--views.py
+|  |--templates/
+|  |--static/
+
+__init__.py
+This file will contain our entire app settings before it gets created. Check the docs on making this here. Some notable settings are registering views (our endpoints) with blueprints, registering custom commands, and database settings.
+
+home/ (the app directory)
+This directory is like when running manage.py createapp home in Django. If you’re not familiar with Django, it is a way to organize your app’s functionalities into folders. For example, you should make a folder called users/ if your app will have users and put related functions such as the models for users in that folder. Instead of home/ , it could be posts/ if you’re making a blog app. In the posts/ folder, you would have a views.py that has all endpoints that related to blog posts. This way it is organized, and also easier to debug since you know where to look if your posts has a problem.
+
+templates/
+This is where your HTML goes, you can reference them in views like a path with /templates as the root. So if there is a folder in /templates called /home like in our demo, it would be home/index.html .
+
+static/
+This is where your css, js, and images go for the most part. You can reference static files like this:
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+Database: Models, Setup, and Wiping
+
+Model attribute classes and parameters can be found in the docs. These docs also show how to do one-to-many and many-to-many relationships. Note that the flask_sqlalchemy docs are minimal because it is built on sqlalchemy, so the original docs on sqlalchemy will give more detail on more complex functions and methods.
+
+We are using the Flask-Migrate package, which we call in our create_app in the main flaskr/__init__.py file. This lets us manage our changes to our database very easily, in a very similar way to how Django does it. Here are the 3 main commands we use for database management:
+
+flask db init
+— Creates our migrations/ folder if it does not exist
+
+flask db migrate
+flask db upgrade
+— Run migrate after making any changes to your model classes in models.py
+— Run upgrade after running migrate to apply changes to the database
+— Coming from Django: migrate is similar to makemigrations, and upgrade is similar to migrate in Django.
+
+After running flask db migrate, it will automatically create a sqlite database file as specified in our __init__.py. Anytime we add or change a model class in our models.py file, we would run flask db migrate and flask db upgrade .
+
+Wiping the Database
+If you want to wipe the entire database: just delete the sqlite file which we named sqlite.db and run flask db migrate; flask db upgrade; .
+
+Wiping Migrations
+If you want to start the migrations over: delete the sqlite file which we named sqlite.db , and then delete everything from migrations/versions/ . Then run flask db migrate; flask db upgrade; to start with a fresh initial migration file.
+Database: Read, Write, Edit
+
+Now that we know how to setup our database, we need to know how to manipulate it through Flask’s ORM. I recommend using flask shell in order to go into interactive mode for learning the syntax for this ORM.
+
+# writing
+from flaskr.models import db, MyModel
+new = MyModel(name="hello")
+db.session.add(new)
+db.session.commit()
+# querying
+q = MyModel.query.all()
+print(q)
+filter = MyModel.query.filter_by(name="hello")
+print(filter)
+# updating
+update = q[0]
+update.name = "bye"
+db.session.add(update)
+db.session.commit()
+# deleting
+db.session.delete(update)
+db.session.commit()
+
+Displaying a Page: Views
+
+Views contain our endpoints for the web app. Below is the minimal code we need in order to get a view up.
+
+# in flaskr/home/views.py
+from flask import render_template, Blueprint
+bp = Blueprint("home", __name__, url_prefix="")@bp.route("/", methods=("GET",))
+def home():
+    return render_template("home/index.html")
+
+Endpoint Anatomy
+The blueprint sets the view’s name, and also the url_prefix. The format for url_prefix is: localhost:5000/[URL_PREFIX]/[ROUTE]/ . So if our blueprint had url_prefix="/home" , and our route had @bp.route(“/flask”) . Our endpoint would be localhost:5000/home/flask .
+
+Namespace Anatomy
+The blueprint also lets us name our view’s namespace, meaning how we reference the view when using something like url_for . The format for namespace is “blueprint_name.function_name”. So if our blueprint was like this: bp = Blueprint(“flaskhome”, __name__, url_prefix=””) , our url_for becomes url_for("flaskhome.home") .
+
+Parameters
+Using parameters just requires 2 extra variables to add to our route:
+
+@bp.route("/<int:pk>", methods=("GET",))
+def home(pk):
+    q = MyModel.query.get(pk)
+    context = {
+        "mymodel": q
+    }
+    return render_template("home/index.html", context=context)
+
+You can see in this example, we take an integer parameter to use for querying the id of a model. So the endpoint localhost:5000/2 would return the model with the id 2 back to us.
+
+Registering Views
+We register our view’s blueprints in the __init__.py .
+
+# from the flaskr/__init__.py from the demo code above
+from .home import views as home_views
+app.register_blueprint(home_views.bp)
+
+HTML Templating
+
+Static files and urls for views:
+
+# this will get static/css/style.css
+{{ url_for('static', filename='css/style.css') }}
+# getting a view's url
+{{ url_for("home.function_name") }}
+# getting a view's url with arguments
+{{ url_for("home.function_name", name=name) }}
+
+Note that the home in this case is the blueprint’s name. If you check the example from above, you will see that the home corresponds to the view’s code: bp = Blueprint(“home”, __name__, url_prefix=””) .
+
+For loops
+
+{% for i in context[“mylist”] %}
+  <p>{{ i }}</p>
+{% endfor %}
+
+If statements
+
+{% if context[“mybool”] %}
+  <p>{{ context[“mybool”] }}</p>
+{% endif %}
+
+Referencing HTML Files Example
+
+# in templates/navbar.html
+<navbar>
+  <ul>
+    <li>Navbar Home</li>
+  </ul>
+</navbar>
+
+We will be using {% include %} to display our navbar. This way we can write 1 line of code instead of rewriting the navbar on every other html file we create.
+
+# in templates/index.html
+<html>
+<head>
+  <title>Myproject</title>
+</head>
+<body>
+  <!-- Including just adds that .html to here -->
+  {% include "navbar.html" %}
+  {% block content %}
+  <!-- Anything extending index.html will be shown between here -->
+  {% endblock %}
+</body>
+</html>
+
+Our index.html will be the base of almost every other html files we create, as it contains the layout of an html file. We will use {% block content %}{% endblock %} so that we can extend index.html to our main content.
+
+# in templates/contents.html
+{% extends "index.html" %}
+{% block content %}
+<h1>Hello Flask, I am in contents.html</h1>
+{% endblock %}
+
+Using {% extends %} will display everything from index.html , except whatever is in between {% block content %} and {% endblock %} . We add the same blocks in our content.html in order to complete the block, so anything in between {% block content %} and {% endblock %} will be displayed on our index.html
+A visual on how referencing HTML files to each other.
+
+For more complex templating, search for jinja . As that is what flask uses to template in HTML.
+Getting User Input: Forms
+
+In templates/home/index.html
+
+<form action="post" action="{{ url_for('home.func_form') }}">
+  <label for="pk">Model ID:</label>
+  <input id="pk" type="text" name="mymodel_pk">
+  <input type="submit" value="Submit">
+</form>
+
+In home/views.py
+
+from flask import render_template, Blueprint, request
+bp = Blueprint("home", __name__, url_prefix="")@bp.route("/", methods=("GET",))
+def home():
+    return render_template("home/index.html")@bp.route("/myform", methods=("POST",))
+def func_form():
+    pk = request.form["mymodel_pk"]
+    context = {
+        "mymodel_pk": pk
+    }
+    return render_template("home/page.html", context=context)
+
+In templates/home/page.html
+
+<p>{{ context["mymodel_pk"] }}</p>
+
+This code example should show the rough idea on how to retrieve user input from a form. You can use the pk in func_form() to query the database to edit or delete that data, or use the user input to create new data and add it to the database.
+Flask Commands Overview
+
+Here are the main commands used in flask:
+
+Database Management: flask db init, flask db migrate, flask db upgrade
+Mainly migrate and upgrade are used throughout development after using init.
+
+Flask Env’s Interactive Mode: flask shell
+Use this when you want to interact with the database for testing queries and methods.
+Notable Go-to Resources
+
+    Flask Docs
+    Flask Migrate
+    Flask SQLAlchemy
+    SQLAlchemy
+    Jinja
+
+This framework is great for starting a small personal project, as not all projects need scalability. I hope these concepts help jump start whatever you are trying to do in Flask.
+https://antisyllogism.medium.com/python-flask-tutorial-463c6b2ba1bc
