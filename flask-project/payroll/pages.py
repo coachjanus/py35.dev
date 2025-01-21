@@ -1,13 +1,17 @@
+# flask_payroll/payroll/pages.py
+
 from flask import Blueprint, render_template
 
-bp = Blueprint('pages', __name__)
+bp = Blueprint("pages", __name__)
 
-@bp.route('/')
+@bp.route("/")
 def home():
-    return render_template("pages/home.html")
-    # return "Home page."
+	return render_template("pages/home.html")
+	# return "Hello, Home!"
 
-@bp.route('/about')
+
+@bp.route("/about")
 def about():
-    return render_template("pages/about.html")
-    # return "About page."
+	return render_template("pages/about.html")
+	# return "Hello, About!"
+

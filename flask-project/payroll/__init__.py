@@ -1,53 +1,32 @@
+"""flask_payroll/payroll/__init__.py: Initialize Flask application."""
+# 
 from flask import Flask
-from payroll import pages, database, staff
-import os
+import os 
 
+from payroll import pages, database, staff, departments, auth #, books
 
-def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
-    
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'payroll.db')
-
+def create_app():
+	app = Flask(__name__, instance_relative_config=True)
+	app.config.from_mapping(
+        SECRET_KEY="Bala bala bal",
+        DATABASE=os.path.join(app.instance_path, 'payroll.sqlite')    
     )
+	# ensure the instance folder exists
+	try:
+		os.makedirs(app.instance_path)
+	except OSError:
+		pass
+	app.config.from_pyfile("application.cfg", silent=True)
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+	database.init_app(app)
 
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
-    
-    database.init_app(app)
-    # a simple page that says hello
-    
-    app.register_blueprint(pages.bp)
-    app.register_blueprint(staff.bp)
-
-    return app
-
-# def create_app():
-#     app = Flask(__name__, instance_relative_config=True)
-#     app.config.from_mapping(
-#         SECRET_KEY="dev",
-#         DATABASE=os.path.join(app.instance_path, 'payroll.db')
-#     )
-#     try:
-#         os.makedirs(app.instance_path)
-#     except OSError:
-#         pass
-
-#     database.init_app(app)
-
-#     app.register_blueprint(pages.bp)
-#     app.register_blueprint(staff.bp)
-#     return app
+	print(app.config['SECRET_KEY'])
+	print(app.config['DATABASE'])
+	
+	app.register_blueprint(pages.bp)
+	app.register_blueprint(staff.bp)
+	app.register_blueprint(departments.bp)
+	app.register_blueprint(auth.bp)
+	# app.register_blueprint(books.bp)
+	
+	return app
