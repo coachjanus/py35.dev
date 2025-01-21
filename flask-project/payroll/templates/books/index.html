@@ -1,0 +1,48 @@
+<!-- flask_payroll/payroll/templates/books/index.html -->
+{% extends 'base.html' %}
+
+
+<div class="container">
+  {% block header %}
+  <div class="d-flex justify-content-between mt-2 align-items-center">
+    <h2>Book list</h2>
+    {% block create %}
+    <a type="button" class="btn btn-primary" href="{{ url_for('books.cheapest') }}">Cheapest books</a>
+    <a type="button" class="btn btn-primary" href="{{ url_for('books.best') }}">Best books</a>
+    {% endblock %}
+  
+  </div>
+  {% endblock header %}
+</div>
+
+{% block content %}
+<div class="container">
+  
+  
+  <table class="table table-striped">
+    <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+            <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ item['name'] }}</td>
+            <td>{{ item['price'] }}</td>
+            <td>{{ item['rating'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+  </table>
+
+
+  <p>
+	Learn more about this project by visiting the <a href="{{ url_for('pages.about') }}">About page</a>.
+  </p>
+</div>
+{% endblock content %}
